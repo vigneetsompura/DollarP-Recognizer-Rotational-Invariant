@@ -1,14 +1,14 @@
 package application;
 	
 import javafx.application.Application;
-import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.fxml.FXMLLoader;
+import javafx.stage.Stage;
 
 
 public class Main extends Application {
