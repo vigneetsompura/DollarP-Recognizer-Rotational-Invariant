@@ -34,48 +34,28 @@ public class Template implements Serializable{
 	/**
 	 * initializes typeEnum field
 	 */
-	public void typeEnum() {
-		typeEnum.put("arrowhead", 'A');
-		typeEnum.put("asterisk", 'B');
-		typeEnum.put("D", 'D');
-		typeEnum.put("exclamation_point", 'E');
-		typeEnum.put("five_point_star", 'F');
-		typeEnum.put("H", 'H');
-		typeEnum.put("half_note", 'G');
-		typeEnum.put("I", 'I');
-		typeEnum.put("line", 'L');
-		typeEnum.put("N", 'N');
-		typeEnum.put("null", 'O');
-		typeEnum.put("P", 'P');
-		typeEnum.put("pitchfork", 'Q');
-		typeEnum.put("six_point_star", 'S');
-		typeEnum.put("T", 'T');
-		typeEnum.put("X", 'X');
-	}
+
 	
 	public Template(String type) {
 		this.type = type;
 		points = new ArrayList<Point>();
-		typeEnum();
 	}
 	
 	public Template(String type, String id) {
 		this.type = type;
 		this.ID = id;
 		points = new ArrayList<Point>();
-		typeEnum();
 	}
 	
 	public Template(String type,ArrayList<Point> points) {
 		this.type = type;
 		this.points = points;
-		typeEnum();
+
 	}
 	
 	public Template(ArrayList<Point> points) {
 		this.type = "";
 		this.points = points;
-		typeEnum();
 	}
 
 	/** 
@@ -97,12 +77,12 @@ public class Template implements Serializable{
 		this.points = points;
 	}
 	
-	public char getTypeEnum() {
-		return typeEnum.get(type);
+	public String getTypeEnum() {
+		return type;
 	}
 	
 	/**
-	 * Adds specided point at the end of the list of points in template.
+	 * Adds specified point at the end of the list of points in template.
 	 * @param point Point to be added.
 	 */
 	public void addPoint(Point point) {

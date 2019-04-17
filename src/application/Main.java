@@ -1,5 +1,12 @@
 package application;
 	
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -9,6 +16,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import utilities.DataHandling;
 
 
 public class Main extends Application {
@@ -33,7 +41,13 @@ public class Main extends Application {
 		}
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+		java.nio.file.Path p = java.nio.file.Paths.get("");
+    	System.out.println(p.toAbsolutePath().toString());
+    	File f = new File("Data32.obj");
+    	if(!f.exists()) {
+    		DataHandling.writeObject(DataHandling.preprocessXML("Dataset\\",32), "Data32.obj");
+    	}
 		launch(args);
 	}
 }

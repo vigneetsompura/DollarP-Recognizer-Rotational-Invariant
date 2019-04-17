@@ -96,6 +96,50 @@ public class DollarP {
 		return t;
 	}
 	
+	public static Template rotate(Template template, int theta) {
+		double x=0, y=0;
+		double angle = Math.toRadians(theta);
+		Template t = new Template(template.getType(), template.getID());
+		for(Point p: template.getPoints()) {
+			x = x+p.getX();
+			y = y+p.getY();
+		}
+		x = x/template.getPoints().size();
+		y = y/template.getPoints().size();
+		
+		for(Point p: template.getPoints()) {
+			double newX = (p.getX()-x)*Math.cos(angle) - (p.getY()-y)*Math.sin(angle) + x;
+			double newY = (p.getX()-x)*Math.sin(angle) - (p.getY()-y)*Math.cos(angle) + y;
+			t.addPoint(new Point(newX, newY, p.getStrokeID()));
+		}
+		return t;
+	}
+	
+	public static Template findTemplateWithMinimumBoundingBox(Template template) {
+		
+		double minarea = Double.POSITIVE_INFINITY;
+		int minTheta = 0;
+		
+		for(int theta=-45; theta<45; theta++) {
+			Template temp = DollarP.rotate(template, theta);
+			double xmin = Double.POSITIVE_INFINITY, ymin = Double.POSITIVE_INFINITY;
+			double xmax = 0, ymax = 0;
+			ArrayList<Point> points = temp.getPoints();
+			Template t = new Template(temp.getType(),temp.getID());
+			for(Point p : points) {
+				xmin = Math.min(xmin, p.getX());
+				ymin = Math.min(ymin, p.getY());
+				xmax = Math.max(xmax, p.getX());
+				ymax = Math.max(ymax, p.getY());
+			}
+			if(minarea > (xmax-xmin)*(ymax-ymin)) {
+				minarea = (xmax-xmin)*(ymax-ymin);
+				minTheta = theta;
+			}
+		}
+		return DollarP.rotate(template, minTheta);
+	}
+	
 	/**
 	 * Translates the template(centroid) to origin.
 	 * 
@@ -129,8 +173,9 @@ public class DollarP {
 		Template q = resample(p,N);
 		Template r = scale(q);
 		Template s = translateToOrigin(r);
+		Template rotated = findTemplateWithMinimumBoundingBox(s); 
 		//System.out.println(temp.getPoints().size()+":"+p.getPoints().size()+":"+q.getPoints().size()+":"+r.getPoints().size()+":"+s.getPoints().size());
-		return s;
+		return rotated;
 	}
 	
 	/**
@@ -195,20 +240,21 @@ public class DollarP {
 	public static Result recognize(Template candidate, ArrayList<Template> templates) {
 		int N = templates.get(0).getPoints().size();
 		Template c = normalize(candidate, N);
-		double score = 99999999;
+		double score = Double.POSITIVE_INFINITY;
 		
 		// holds NBest List
 		
 		ArrayList<Result> NB = new ArrayList<Result>(); 
 		Template r = null;
 		for(Template t: templates) {
-			double d = greedyCloudMatch(c, t, N);
-			
-			if(score>d) {
-				score = d;
-				r = t.clone();
+			for(int i=0;i<360; i+=90) {
+				double d = greedyCloudMatch(c, DollarP.rotate(t,i), N);	
+				if(score>d) {
+					score = d;
+					r = t.clone();
+				}
+				NB.add(new Result(t.clone(),d));
 			}
-			NB.add(new Result(t.clone(),d));
 		}
 		Collections.sort(NB);
 		ArrayList<String> nBest = new ArrayList<String>();
@@ -219,6 +265,8 @@ public class DollarP {
 			i++;
 		}
 		//score = Math.max((2-score)/2, 0);
-		return new Result(r, score, nBest);
+		Result result = new Result(r, score, nBest);
+		
+		return result;
 	}
 }
