@@ -78,7 +78,7 @@ public class DollarP {
 	 * @return scaled template
 	 */
 	public static Template scale(Template temp) {
-		double xmin = 9999999, ymin = 9999999;
+		double xmin = Double.POSITIVE_INFINITY, ymin = Double.POSITIVE_INFINITY;
 		double xmax = 0, ymax = 0;
 		ArrayList<Point> points = temp.getPoints();
 		Template t = new Template(temp.getType(),temp.getID());
@@ -96,6 +96,13 @@ public class DollarP {
 		return t;
 	}
 	
+	/**
+	 * Rotates the template by given angle.
+	 * 
+	 * @param template Template
+	 * @param theta Angle of Rotation
+	 * @return Rotated Template.
+	 * */
 	public static Template rotate(Template template, int theta) {
 		double x=0, y=0;
 		double angle = Math.toRadians(theta);
@@ -108,13 +115,21 @@ public class DollarP {
 		y = y/template.getPoints().size();
 		
 		for(Point p: template.getPoints()) {
-			double newX = (p.getX()-x)*Math.cos(angle) - (p.getY()-y)*Math.sin(angle) + x;
-			double newY = (p.getX()-x)*Math.sin(angle) - (p.getY()-y)*Math.cos(angle) + y;
+			double newX = (p.getX()-x)*Math.cos(angle) + (p.getY()-y)*Math.sin(angle) + x;
+			double newY = - (p.getX()-x)*Math.sin(angle) + (p.getY()-y)*Math.cos(angle) + y;
 			t.addPoint(new Point(newX, newY, p.getStrokeID()));
 		}
+		t.setRotation(template.getRotation()+theta);
 		return t;
 	}
 	
+	
+	/**
+	 *  Finds the rotation with minimum bounding box and returns rotated template
+	 *  
+	 *  @param template Template Gesture
+	 *  @return Rotated template such that area of bounding box is minimum
+	 * */
 	public static Template findTemplateWithMinimumBoundingBox(Template template) {
 		
 		double minarea = Double.POSITIVE_INFINITY;
@@ -137,7 +152,8 @@ public class DollarP {
 				minTheta = theta;
 			}
 		}
-		return DollarP.rotate(template, minTheta);
+		Template result = DollarP.rotate(template, minTheta);
+		return result;
 	}
 	
 	/**
@@ -186,24 +202,27 @@ public class DollarP {
 	 * @param temp Template gesture
 	 * @param N: sampling rate
 	 * @param start starting point
+	 * @param rotationalPenaltyRate weight at which rotation is penalized
 	 * @return sum of min distance over all points
 	 */
-	public static double cloudDistance(Template candidate, Template temp, int N, int start) {
-		ArrayList<Point> t = temp.clone().getPoints();
+	public static double cloudDistance(Template candidate, Template template, int N, int start, double rotationPenaltyRate) {
+		ArrayList<Point> t = template.clone().getPoints(); // gets the clone of points of template
 		ArrayList<Point> c = candidate.getPoints();
 		double sum = 0;
 		int i = start;
 		do {
-			double min = 99999999;
+			double min = Double.POSITIVE_INFINITY;
 			int index=0;
 			for(int j=0; j<t.size();j++) {
-				double d = distance(c.get(i), t.get(j));
+				double absoluteRotation = Math.abs(candidate.getRotation()-template.getRotation());
+				double adjustedRotation = Math.min(absoluteRotation, 360-absoluteRotation);
+				double d = distance(c.get(i), t.get(j)) + rotationPenaltyRate*(Math.toRadians(adjustedRotation));
 				if (d<min) {
 					min = d;
 					index = j;
 				}
 			}
-			t.remove(index);
+			t.remove(index); // removes the selected point from copy of template so that it is not selected again 
 			double weight = 1 - ((i-start+N)%N)/N;
 			sum = sum + weight*min;
 			i = (i+1)%N;
@@ -218,14 +237,15 @@ public class DollarP {
 	 * @param candidate gesture 
 	 * @param temp Template gesture
 	 * @param N sampling rate
+	 * @param rotationalPenaltyRate weight at which rotation is penalized
 	 * @return min distance 
 	 */
-	public static double greedyCloudMatch(Template candidate, Template temp, int N) {
-		double min = 99999999;
+	public static double greedyCloudMatch(Template candidate, Template temp, int N, double rotationPenaltyRate) {
+		double min = Double.POSITIVE_INFINITY;
 		int step = (int) Math.floor(Math.pow(N, 0.5));
 		for(int i=0; i<N; i+=step) {
-			double d1 = cloudDistance(candidate, temp, N, i);
-			double d2 = cloudDistance(temp, candidate, N, i);
+			double d1 = cloudDistance(candidate, temp, N, i, rotationPenaltyRate);
+			double d2 = cloudDistance(temp, candidate, N, i, rotationPenaltyRate);
 			min = Math.min(min, Math.max(d1, d2));
 		}
 		return min;
@@ -235,9 +255,10 @@ public class DollarP {
 	/**
 	 * @param candidate gesture 
 	 * @param templates set of training templates 
+	 * @param rotationalPenaltyRate weight at which rotation is penalized 
 	 * @return Result object containing the best Match and NBest List
 	 */
-	public static Result recognize(Template candidate, ArrayList<Template> templates) {
+	public static Result recognize(Template candidate, ArrayList<Template> templates, double rotationPenaltyRate) {
 		int N = templates.get(0).getPoints().size();
 		Template c = normalize(candidate, N);
 		double score = Double.POSITIVE_INFINITY;
@@ -248,7 +269,8 @@ public class DollarP {
 		Template r = null;
 		for(Template t: templates) {
 			for(int i=0;i<360; i+=90) {
-				double d = greedyCloudMatch(c, DollarP.rotate(t,i), N);	
+				Template rotatedC = DollarP.rotate(c, i);
+				double d = greedyCloudMatch(rotatedC, t, N, rotationPenaltyRate);	
 				if(score>d) {
 					score = d;
 					r = t.clone();
@@ -259,9 +281,13 @@ public class DollarP {
 		Collections.sort(NB);
 		ArrayList<String> nBest = new ArrayList<String>();
 		int i = 0;
+		//System.out.println();
+		//System.out.println("-----------------------------------");
 		while(i<NB.size() && i<20) {
 			Result rs = NB.get(i);
 			nBest.add(rs.getTemp().getTypeEnum()+"-"+rs.getTemp().getID()+":"+String.format("%.2f", rs.getScore()));
+			
+			//System.out.println(rs.getTemp().getTypeEnum()+"-"+rs.getTemp().getID()+":"+String.format("%.2f", rs.getScore()));
 			i++;
 		}
 		//score = Math.max((2-score)/2, 0);

@@ -36,7 +36,7 @@ public class MainController implements Initializable{
     private ArrayList<Point> points = new ArrayList<Point>();
     private GraphicsContext gC;
     private ArrayList<Template> t;
-    
+    Template candidate;
     
     @FXML
     private Canvas basecanvas;
@@ -75,8 +75,22 @@ public class MainController implements Initializable{
     
     
     public void recognize() {
-    	Result r = DollarP.recognize(new Template(points), t);
+    	Result r = DollarP.recognize(new Template(points), t, 0.02);
     	resultContainer.setText("Result:  "+r.getTemp().getType()+":"+r.getScore());
+    	
+//    	candidate  = DollarP.findTemplateWithMinimumBoundingBox(new Template(points));
+//    	gC.beginPath();
+//    	clearCanvas();
+//    	gC.moveTo(candidate.getPoints().get(0).getX(), candidate.getPoints().get(0).getY());
+//    	gC.lineTo(candidate.getPoints().get(0).getX(), candidate.getPoints().get(0).getY());
+//    	gC.stroke();
+//    	for(int i=1; i<candidate.getPoints().size();i++) {
+//    		if(candidate.getPoints().get(i).getStrokeID()== candidate.getPoints().get(i-1).getStrokeID()) {
+//    		gC.lineTo(candidate.getPoints().get(i).getX(), candidate.getPoints().get(i).getY());
+//    		gC.stroke();
+//    		}
+//    	}
+    	
     }
     
     @FXML
@@ -120,7 +134,7 @@ public class MainController implements Initializable{
 
     	t = new ArrayList<Template>();
     	for(String type: u.get(0).getGestures().keySet()) {
-    		for(int i=0;i<3;i++) {
+    		for(int i=0;i<10;i++) {
 	    		User user = u.get(random.nextInt(u.size()));
 	    		ArrayList<Template> temp = user.getGestures().get(type);
 	    		t.add(temp.get(random.nextInt(temp.size())));

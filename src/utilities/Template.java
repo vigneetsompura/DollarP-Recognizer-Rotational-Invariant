@@ -14,27 +14,25 @@ public class Template implements Serializable{
 	 * Generated versionID
 	 */
 	private static final long serialVersionUID = 8230633969409461766L;
-	/**
-	 * Mapping for Gesture Types.
-	 */
-	HashMap<String, Character> typeEnum = new HashMap<String, Character>();
+	
 	/**
 	 * Gesture type of the Template 
 	 */
-	String type = "";
+	private String type = "";
 	/**
 	 * ID of the Template
 	 */
-	String ID ="0";
+	private String ID ="0";
 	/**
 	 * List of points
 	 */
-	ArrayList<Point> points;
+	private ArrayList<Point> points;
 	
 	/**
-	 * initializes typeEnum field
-	 */
-
+	 * record of rotation from original gesture.
+	 * */
+	private int rotation = 0;
+	
 	
 	public Template(String type) {
 		this.type = type;
@@ -111,6 +109,18 @@ public class Template implements Serializable{
 		ID = iD;
 	}
 
+	public int getRotation() {
+		return rotation;
+	}
+
+	public void setRotation(int rotation) {
+		while(rotation>180) {
+			rotation-=360;
+		}
+		this.rotation = rotation;
+	}
+
+	
 	/**
 	 * Prints all the points of a Template
 	 */

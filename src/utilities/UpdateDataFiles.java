@@ -6,15 +6,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-public class manualcontrol {
-
-	public manualcontrol() {
-		// TODO Auto-generated constructor stub
-	}
+public class UpdateDataFiles {
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
-		// TODO Auto-generated method stub
-		DataHandling.writeObject(DataHandling.preprocessXML("Dataset\\",32), "Data32.obj");
+		DataHandling.writeObject(DataHandling.preprocessXML("mmg\\",32), "mmg32Original.obj");
 	}
 
 }

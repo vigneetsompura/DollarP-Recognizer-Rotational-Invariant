@@ -11,3 +11,9 @@
 #compiled files
 *.class
 /bin/
+
+#other files
+*.obj
+*.csv
+mmg/
+

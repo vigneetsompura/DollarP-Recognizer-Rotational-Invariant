@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Gesture Name="plus~09" Subject="197">
+<Stroke index="1">
+<Point X="178" Y="84"/>
+<Point X="178" Y="85"/>
+<Point X="178" Y="86"/>
+<Point X="179" Y="90"/>
+<Point X="180" Y="105"/>
+<Point X="180" Y="117"/>
+<Point X="180" Y="131"/>
+<Point X="180" Y="146"/>
+<Point X="180" Y="161"/>
+<Point X="180" Y="175"/>
+<Point X="180" Y="186"/>
+<Point X="180" Y="195"/>
+<Point X="180" Y="204"/>
+<Point X="181" Y="212"/>
+<Point X="181" Y="223"/>
+<Point X="181" Y="232"/>
+<Point X="181" Y="241"/>
+<Point X="181" Y="250"/>
+<Point X="181" Y="258"/>
+<Point X="181" Y="261"/>
+<Point X="181" Y="265"/>
+<Point X="181" Y="267"/>
+<Point X="181" Y="271"/>
+<Point X="181" Y="273"/>
+<Point X="181" Y="278"/>
+<Point X="183" Y="284"/>
+<Point X="183" Y="283"/>
+<Point X="183" Y="280"/>
+<Point X="182" Y="278"/>
+<Point X="182" Y="275"/>
+</Stroke>
+<Stroke index="2">
+<Point X="75" Y="189"/>
+<Point X="79" Y="189"/>
+<Point X="83" Y="189"/>
+<Point X="94" Y="188"/>
+<Point X="108" Y="187"/>
+<Point X="123" Y="187"/>
+<Point X="137" Y="185"/>
+<Point X="152" Y="184"/>
+<Point X="168" Y="180"/>
+<Point X="182" Y="178"/>
+<Point X="193" Y="175"/>
+<Point X="204" Y="173"/>
+<Point X="211" Y="172"/>
+<Point X="219" Y="171"/>
+<Point X="226" Y="171"/>
+<Point X="228" Y="171"/>
+<Point X="230" Y="171"/>
+<Point X="232" Y="171"/>
+<Point X="233" Y="171"/>
+<Point X="235" Y="171"/>
+<Point X="236" Y="171"/>
+<Point X="239" Y="171"/>
+<Point X="241" Y="171"/>
+<Point X="244" Y="171"/>
+<Point X="245" Y="171"/>
+<Point X="246" Y="171"/>
+<Point X="247" Y="171"/>
+<Point X="248" Y="171"/>
+<Point X="249" Y="171"/>
+<Point X="250" Y="171"/>
+<Point X="252" Y="171"/>
+<Point X="253" Y="171"/>
+<Point X="254" Y="171"/>
+<Point X="256" Y="170"/>
+<Point X="259" Y="169"/>
+<Point X="262" Y="169"/>
+</Stroke>
+</Gesture>

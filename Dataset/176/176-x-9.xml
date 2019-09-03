@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Gesture Name="x~09" Subject="176">
+<Stroke index="1">
+<Point X="163" Y="84"/>
+<Point X="178" Y="102"/>
+<Point X="191" Y="119"/>
+<Point X="214" Y="145"/>
+<Point X="237" Y="166"/>
+<Point X="267" Y="192"/>
+<Point X="278" Y="203"/>
+<Point X="288" Y="211"/>
+<Point X="293" Y="214"/>
+<Point X="296" Y="217"/>
+<Point X="299" Y="218"/>
+</Stroke>
+<Stroke index="2">
+<Point X="293" Y="88"/>
+<Point X="290" Y="90"/>
+<Point X="284" Y="97"/>
+<Point X="275" Y="109"/>
+<Point X="265" Y="124"/>
+<Point X="250" Y="146"/>
+<Point X="235" Y="168"/>
+<Point X="217" Y="190"/>
+<Point X="205" Y="204"/>
+<Point X="199" Y="211"/>
+<Point X="191" Y="221"/>
+<Point X="185" Y="230"/>
+<Point X="181" Y="237"/>
+<Point X="178" Y="242"/>
+<Point X="177" Y="246"/>
+<Point X="177" Y="247"/>
+<Point X="176" Y="247"/>
+</Stroke>
+</Gesture>

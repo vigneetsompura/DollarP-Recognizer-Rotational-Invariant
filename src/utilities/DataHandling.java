@@ -59,7 +59,7 @@ public class DataHandling {
 						t.addPoint(new Point(x,y,strokeNo));
 					}
 				}
-				t = DollarP.normalize(t, N);
+				t = DollarPOriginal.normalize(t, N);
 				u.addTemplate(t);
 			}
 			user.add(u);
